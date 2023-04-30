@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
+import '../constants.dart';
 import '../controller/story_controller.dart';
 import '../utils.dart';
 import 'story_image.dart';
@@ -218,12 +222,16 @@ class StoryItem {
   /// Shorthand for creating page video. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.pageVideo(
-    String url, {
+    File file, {
     required StoryController controller,
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
+    String? emojiPath,
+    String? tags,
+    String? date,
+    String? time,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
@@ -233,30 +241,126 @@ class StoryItem {
           color: Colors.black,
           child: Stack(
             children: <Widget>[
-              StoryVideo.url(
-                url,
+              StoryVideo.file(
+                file,
                 controller: controller,
                 requestHeaders: requestHeaders,
+                caption: caption,
+
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+              Positioned(
+                left: 5,
+                top: 60,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppAssets.BACK_ARROW,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SvgPicture.asset(
+                          emojiPath!,
+                          height: 34,
+                          width: 33,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(21),
+                            color: AppColor.WHITE.withOpacity(.2),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 8),
+                            child: Text(
+                              '${date} ${time}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontFamily: AppFonts.SF_PRO_ROUNDED_Regular,
+                                color: AppColor.WHITE,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      tags ?? '',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontFamily: AppFonts.SF_PRO_ROUNDED_Regular,
+                        color: AppColor.WHITE,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 65,
+                right: 10,
+                child: SvgPicture.asset(
+                  AppAssets.PLUS_BUTTON,
+                ),
+              ),
+              Positioned(
+                bottom: 30,
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: 50,
+                    maxWidth: Get.size.width-Get.size.width/100*15,
+                 //  MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/100*15,
+                  ),
+                  //   color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      caption ?? '',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: AppFonts.SF_PRO_ROUNDED_Medium,
+                        color: AppColor.WHITE,
+                      ),
+                    ),
                   ),
                 ),
-              )
+              ),
+              Positioned(
+                bottom: 30,
+                right: 0,
+                child: Container(
+                  //  height: 50,
+                  width: Get.size.width-Get.size.width/100*85,
+               //   MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/100*85,
+                  //   color: Colors.green,
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        AppAssets.TEXT_BUTTON,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SvgPicture.asset(
+                        AppAssets.REPLY_BUTTON,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SvgPicture.asset(
+                        AppAssets.SHARE_BUTTON,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

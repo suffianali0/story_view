@@ -13,6 +13,8 @@ dependencies:
   rxdart: ^0.27.2
   video_player: ^2.0.0
   collection: ^1.15.0
+  flutter_svg: ^2.0.4
+  get:
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +25,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/
   # To add assets to your package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

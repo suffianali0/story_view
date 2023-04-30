@@ -3,21 +3,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:video_player/video_player.dart';
 
+import '../constants.dart';
 import '../utils.dart';
 import '../controller/story_controller.dart';
 
 class VideoLoader {
-  String url;
 
   File? videoFile;
 
-  Map<String, dynamic>? requestHeaders;
+
 
   LoadState state = LoadState.loading;
 
-  VideoLoader(this.url, {this.requestHeaders});
+  VideoLoader(this.videoFile, );
 
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
@@ -25,34 +26,33 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
-    fileStream.listen((fileResponse) {
-      if (fileResponse is FileInfo) {
-        if (this.videoFile == null) {
-          this.state = LoadState.success;
-          this.videoFile = fileResponse.file;
-          onComplete();
-        }
-      }
-    });
   }
 }
 
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final String? caption;
+  final String? emojiPath;
+  final String? tags;
+  final String? date;
+  final String? time;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
+  StoryVideo(this.videoLoader, {this.storyController, Key? key, this.caption, this.emojiPath, this.tags, this.date, this.time})
       : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url,
+  static StoryVideo file(File file,
       {StoryController? controller,
       Map<String, dynamic>? requestHeaders,
+        String? caption,
+        final String? emojiPath,
+        final String? tags,
+        final String? date,
+        final String? time,
       Key? key}) {
     return StoryVideo(
-      VideoLoader(url, requestHeaders: requestHeaders),
+      VideoLoader(file),
       storyController: controller,
       key: key,
     );
@@ -126,12 +126,15 @@ class StoryVideoState extends State<StoryVideo> {
             ),
           )
         : Center(
-            child: Text(
-            "Media failed to load.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ));
+      child: Container(
+        width: 70,
+        height: 70,
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          strokeWidth: 3,
+        ),
+      ),
+    );
   }
 
   @override
