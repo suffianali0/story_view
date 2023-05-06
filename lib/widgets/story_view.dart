@@ -730,35 +730,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          Visibility(
-            visible: widget.progressPosition != ProgressPosition.none,
-            child: Align(
-              alignment: widget.progressPosition == ProgressPosition.top
-                  ? Alignment.topCenter
-                  : Alignment.bottomCenter,
-              child: SafeArea(
-                bottom: widget.inline ? false : true,
-                // we use SafeArea here for notched and bezeles phones
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: PageBar(
-                    widget.storyItems
-                        .map((it) => PageData(it!.duration, it.shown))
-                        .toList(),
-                    this._currentAnimation,
-                    key: UniqueKey(),
-                    indicatorHeight: widget.inline
-                        ? IndicatorHeight.small
-                        : IndicatorHeight.large,
-                    indicatorColor: widget.indicatorColor,
-                  ),
-                ),
-              ),
-            ),
-          ),
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
@@ -822,6 +793,35 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70),
           ),
           _currentView,
+          Visibility(
+            visible: widget.progressPosition != ProgressPosition.none,
+            child: Align(
+              alignment: widget.progressPosition == ProgressPosition.top
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
+              child: SafeArea(
+                bottom: widget.inline ? false : true,
+                // we use SafeArea here for notched and bezeles phones
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: PageBar(
+                    widget.storyItems
+                        .map((it) => PageData(it!.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                    indicatorHeight: widget.inline
+                        ? IndicatorHeight.small
+                        : IndicatorHeight.large,
+                    indicatorColor: widget.indicatorColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
