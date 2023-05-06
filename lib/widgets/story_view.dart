@@ -348,8 +348,13 @@ class StoryItem {
                       const SizedBox(
                         height: 25,
                       ),
-                      SvgPicture.asset(
-                        AppAssets.REPLY_BUTTON,
+                      GestureDetector(
+                        onTap: (){
+                          print('hit');
+                        },
+                        child: SvgPicture.asset(
+                          AppAssets.REPLY_BUTTON,
+                        ),
                       ),
                       const SizedBox(
                         height: 25,
