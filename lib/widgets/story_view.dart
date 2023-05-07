@@ -730,68 +730,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          Align(
-              alignment: Alignment.centerRight,
-              heightFactor: 1,
-              child: GestureDetector(
-                onTapDown: (details) {
-                  widget.controller.pause();
-                },
-                onTapCancel: () {
-                  widget.controller.play();
-                },
-                onTapUp: (details) {
-                  // if debounce timed out (not active) then continue anim
-                  if (_nextDebouncer?.isActive == false) {
-                    widget.controller.play();
-                  } else {
-                    widget.controller.next();
-                  }
-                },
-                onVerticalDragStart: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.pause();
-                      },
-                onVerticalDragCancel: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : () {
-                        widget.controller.play();
-                      },
-                onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
-
-                        verticalDragInfo!.update(details.primaryDelta!);
-
-                        // TODO: provide callback interface for animation purposes
-                      },
-                onVerticalDragEnd: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.play();
-                        // finish up drag cycle
-                        if (!verticalDragInfo!.cancel &&
-                            widget.onVerticalSwipeComplete != null) {
-                          widget.onVerticalSwipeComplete!(
-                              verticalDragInfo!.direction);
-                        }
-
-                        verticalDragInfo = null;
-                      },
-              )),
-          Align(
-            alignment: Alignment.centerLeft,
-            heightFactor: 1,
-            child: SizedBox(
-                child: GestureDetector(onTap: () {
-                  widget.controller.previous();
-                }),
-                width: 70),
-          ),
           _currentView,
           Visibility(
             visible: widget.progressPosition != ProgressPosition.none,
@@ -822,6 +760,97 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
             ),
           ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                //    heightFactor: 1,
+                child: SizedBox(
+                  child: GestureDetector(
+                    onTapDown: (details) {
+                      widget.controller.pause();
+                    },
+                    onTapCancel: () {
+                      widget.controller.play();
+                    },
+                    onTapUp: (details) {
+                      // if debounce timed out (not active) then continue anim
+                      if (_nextDebouncer?.isActive == false) {
+                        widget.controller.play();
+                      } else {
+                        widget.controller.previous();
+                      }
+                    },
+                  behavior: HitTestBehavior.opaque,
+                  ),
+                  width: MediaQuery.of(context).size.width/2,
+                  height: MediaQuery.of(context).size.height*0.6,
+                ),
+              ),
+              Align(
+                  alignment: Alignment.topRight,
+                //  heightFactor: 2,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height*0.6,
+                    width: MediaQuery.of(context).size.width/2,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapDown: (details) {
+                        widget.controller.pause();
+                      },
+                      onTapCancel: () {
+                        widget.controller.play();
+                      },
+                      onTapUp: (details) {
+                        // if debounce timed out (not active) then continue anim
+                        if (_nextDebouncer?.isActive == false) {
+                          widget.controller.play();
+                        } else {
+                          widget.controller.next();
+                        }
+                      },
+                    /*  onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                          ? null
+                          : (details) {
+                        widget.controller.pause();
+                      },
+                      onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                          ? null
+                          : () {
+                        widget.controller.play();
+                      },
+                      onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                          ? null
+                          : (details) {
+                        if (verticalDragInfo == null) {
+                          verticalDragInfo = VerticalDragInfo();
+                        }
+
+                        verticalDragInfo!.update(details.primaryDelta!);
+
+                        // TODO: provide callback interface for animation purposes
+                      },
+                      onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                          ? null
+                          : (details) {
+                        widget.controller.play();
+                        // finish up drag cycle
+                        if (!verticalDragInfo!.cancel &&
+                            widget.onVerticalSwipeComplete != null) {
+                          widget.onVerticalSwipeComplete!(
+                              verticalDragInfo!.direction);
+                        }
+
+                        verticalDragInfo = null;
+                      },*/
+                    ),
+                  )),
+
+            ],
+          ),
+
+
         ],
       ),
     );
